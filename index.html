@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Repository</title>
+    <style>
+        /* --- SYSTEM DESIGN VARIABLES --- */
+        :root {
+            --bg-color: #050a14;       /* Sehr dunkles Blau */
+            --card-bg: #0a1525;        /* Etwas helleres Blau für die Kacheln */
+            --line-idle: #1e3a5f;      /* Dunkle, dezente Linien */
+            --line-active: #00d4ff;    /* Leuchtendes Blau bei Hover */
+            --text-main: #e6f1ff;      /* Fast Weiß */
+            --text-dim: #8892b0;       /* Gedimmter Text */
+            --font-stack: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* --- GLOBAL RESET & LAYOUT --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(30, 58, 95, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 58, 95, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px; /* Technisches Raster im Hintergrund */
+            font-family: var(--font-stack);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            margin-top: 60px;
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--line-idle);
+            padding-bottom: 20px;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-weight: 200;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* --- GRID SYSTEM --- */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1000px;
+            padding-bottom: 60px;
+        }
+
+        /* --- CARD DESIGN (DIE RAFFINIERTEN LINIEN) --- */
+        .app-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--line-idle);
+            padding: 25px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Hover-Effekt: Leuchten und leichte Bewegung */
+        .app-card:hover {
+            border-color: var(--line-active);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px -10px rgba(0, 212, 255, 0.15);
+        }
+
+        /* Akzent-Linie an der Seite */
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background-color: var(--line-active);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .app-card:hover::before {
+            opacity: 1;
+        }
+
+        .app-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--line-active);
+        }
+
+        .app-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            color: var(--line-idle);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>System Apps</h1>
+        <div class="subtitle">Repository Index // HTML5 Deployments</div>
+    </header>
+
+    <div class="app-grid">
+
+        <a href="./App_Ordnername_1/index.html" class="app-card">
+            <div class="app-name">App Projekt Alpha</div>
+            <div class="app-desc">Synthesizer Interface Test v1.0. Audio API Integration.</div>
+        </a>
+
+        <a href="./App_Ordnername_2/index.html" class="app-card">
+            <div class="app-name">Visualizer Beta</div>
+            <div class="app-desc">Canvas Rendering Experiment. Partikelsystem.</div>
+        </a>
+
+        <a href="#" class="app-card" style="opacity: 0.5; pointer-events: none;">
+            <div class="app-name">Slot Empty</div>
+            <div class="app-desc">Reserviert für zukünftige Deployments.</div>
+        </a>
+
+    </div>
+
+    <footer>
+        System Status: Online
+    </footer>
+
+</body>
+</html>
