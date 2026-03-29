@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +7,12 @@
     <style>
         /* --- SYSTEM DESIGN VARIABLES --- */
         :root {
-            --bg-color: #050a14;
-            /* Sehr dunkles Blau */
-            --card-bg: #0a1525;
-            /* Etwas helleres Blau für die Kacheln */
-            --line-idle: #1e3a5f;
-            /* Dunkle, dezente Linien */
-            --line-active: #00d4ff;
-            /* Leuchtendes Blau bei Hover */
-            --text-main: #e6f1ff;
-            /* Fast Weiß */
-            --text-dim: #8892b0;
-            /* Gedimmter Text */
+            --bg-color: #050a14;       /* Sehr dunkles Blau */
+            --card-bg: #0a1525;        /* Etwas helleres Blau für die Kacheln */
+            --line-idle: #1e3a5f;      /* Dunkle, dezente Linien */
+            --line-active: #00d4ff;    /* Leuchtendes Blau bei Hover */
+            --text-main: #e6f1ff;      /* Fast Weiß */
+            --text-dim: #8892b0;       /* Gedimmter Text */
             --font-stack: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
@@ -28,11 +21,10 @@
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
-            background-image:
+            background-image: 
                 linear-gradient(rgba(30, 58, 95, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(30, 58, 95, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            /* Technisches Raster im Hintergrund */
+            background-size: 40px 40px; /* Technisches Raster im Hintergrund */
             font-family: var(--font-stack);
             color: var(--text-main);
             display: flex;
@@ -135,7 +127,6 @@
         }
     </style>
 </head>
-
 <body>
 
     <header>
@@ -145,9 +136,9 @@
 
     <div class="app-grid">
 
-        <a href="#" class="app-card" style="opacity: 0.5; pointer-events: none;">
-            <div class="app-name">Leer</div>
-            <div class="app-desc">Reserviert für zukünftige Deployments.</div>
+        <a href="./Harmonie Engine Pro 1.0/index.html" class="app-card">
+            <div class="app-name">Harmonie Engine 2.0</div>
+            <div class="app-desc">Dein Schweizer Taschenmesser für Akkorde, Melodien & Theorie</div>
         </a>
 
         <a href="./App_Ordnername_2/index.html" class="app-card">
@@ -167,5 +158,4 @@
     </footer>
 
 </body>
-
 </html>
