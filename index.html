@@ -3,159 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Repository</title>
+    <title>Heiko's App-Kiste</title>
     <style>
-        /* --- SYSTEM DESIGN VARIABLES --- */
         :root {
-            --bg-color: #050a14;       /* Sehr dunkles Blau */
-            --card-bg: #0a1525;        /* Etwas helleres Blau für die Kacheln */
-            --line-idle: #1e3a5f;      /* Dunkle, dezente Linien */
-            --line-active: #00d4ff;    /* Leuchtendes Blau bei Hover */
-            --text-main: #e6f1ff;      /* Fast Weiß */
-            --text-dim: #8892b0;       /* Gedimmter Text */
-            --font-stack: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --bg-dark: #050814;
+            --bg-light: #11182c;
+            --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        /* --- GLOBAL RESET & LAYOUT --- */
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            background-image: 
-                linear-gradient(rgba(30, 58, 95, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30, 58, 95, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px; /* Technisches Raster im Hintergrund */
+            background: radial-gradient(circle at 50% 30%, var(--bg-light) 0%, var(--bg-dark) 100%);
+            background-attachment: fixed;
             font-family: var(--font-stack);
-            color: var(--text-main);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
+        /* --- BACKGROUND ENGINE --- */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                radial-gradient(1.5px 1.5px at 10% 20%, #fff 100%, transparent),
+                radial-gradient(1px 1px at 30% 50%, #fff 100%, transparent),
+                radial-gradient(2px 2px at 80% 10%, #fff 100%, transparent),
+                radial-gradient(1px 1px at 90% 70%, #fff 100%, transparent),
+                radial-gradient(1.5px 1.5px at 40% 80%, rgba(255,255,255,0.4) 100%, transparent),
+                radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.4) 100%, transparent);
+            background-size: 250px 250px;
+            opacity: 0.5;
+        }
+
+        .perspective-grid {
+            position: fixed;
+            bottom: -25vh; left: -50vw;
+            width: 200vw; height: 70vh;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: perspective(600px) rotateX(75deg);
+            mask-image: linear-gradient(to top, black 10%, transparent 80%);
+            -webkit-mask-image: linear-gradient(to top, black 10%, transparent 80%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- HEADER --- */
         header {
-            margin-top: 60px;
-            margin-bottom: 40px;
-            text-align: center;
-            border-bottom: 1px solid var(--line-idle);
-            padding-bottom: 20px;
-            width: 90%;
-            max-width: 800px;
+            margin-top: 12vh;
+            margin-bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
         }
 
         h1 {
-            font-weight: 200;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #a5f3fc, #ffffff, #d8b4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 
+                0 0 30px rgba(0, 240, 255, 0.4),
+                0 0 50px rgba(177, 75, 244, 0.3);
+        }
+
+        .subtitle-pill {
+            margin-top: 15px;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin: 0;
-            font-size: 1.8rem;
+            color: #a5f3fc;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            box-shadow: 
+                0 0 15px rgba(0, 240, 255, 0.2),
+                inset 0 0 10px rgba(0, 240, 255, 0.1);
+            backdrop-filter: blur(8px);
         }
 
-        .subtitle {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
-        /* --- GRID SYSTEM --- */
+        /* --- GRID & CARDS (NATIVE CSS/SVG RENDERING) --- */
         .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 70px 60px; /* Vertikal 70px, Horizontal 60px */
             width: 90%;
             max-width: 1000px;
-            padding-bottom: 60px;
+            z-index: 10;
+            padding-bottom: 100px;
         }
 
-        /* --- CARD DESIGN (DIE RAFFINIERTEN LINIEN) --- */
-        .app-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--line-idle);
-            padding: 25px;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.2s ease-in-out;
+        .card-wrapper {
+            flex: 0 1 400px; /* Leicht verbreitert */
+            height: 420px; /* Erhöht für mehr vertikalen Freiraum */
+            border-radius: 18px;
+            padding: 1.5px;
             position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            cursor: pointer;
         }
 
-        /* Hover-Effekt: Leuchten und leichte Bewegung */
-        .app-card:hover {
-            border-color: var(--line-active);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px -10px rgba(0, 212, 255, 0.15);
+        .card-wrapper:hover {
+            transform: translateY(-5px) scale(1.02);
+            padding: 4px; /* Breiter Rand bei Berührung */
         }
 
-        /* Akzent-Linie an der Seite */
-        .app-card::before {
+        /* Rotierender animierter Rand */
+        .card-wrapper::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background-color: var(--line-active);
+            top: 50%; left: 50%;
+            width: 250%; height: 250%;
+            transform: translate(-50%, -50%) rotate(0deg);
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        .app-card:hover::before {
+        .card-wrapper:hover::before {
             opacity: 1;
+            animation: borderSpin 3s linear infinite;
         }
 
-        .app-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--line-active);
+        @keyframes borderSpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .card-wrapper.amber {
+            background: linear-gradient(135deg, rgba(255, 200, 114, 0.8), rgba(255, 255, 255, 0.1) 40%, rgba(255, 179, 71, 0.4));
+            box-shadow: 0 0 40px rgba(255, 179, 71, 0.15);
+        }
+        
+        .card-wrapper.amber::before {
+            background: conic-gradient(from 0deg, transparent 60%, #ffc872, #f97316, transparent 80%);
+        }
+        
+        .card-wrapper.blue {
+            background: linear-gradient(135deg, rgba(177, 75, 244, 0.8), rgba(255, 255, 255, 0.1) 40%, rgba(0, 240, 255, 0.6));
+            box-shadow: 0 0 40px rgba(71, 145, 255, 0.15);
+        }
+
+        .card-wrapper.blue::before {
+            background: conic-gradient(from 0deg, transparent 60%, #00f2fe, #b14bf4, transparent 80%);
+        }
+
+        .app-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: rgba(22, 27, 44, 0.9);
+            border-radius: 15px;
+            padding: 45px 35px 35px 35px; /* Inneres Padding erhöht */
+            text-decoration: none;
+            color: var(--text-main);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .prism-flare {
+            position: absolute;
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            filter: blur(40px);
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        .amber .prism-flare.top-left { top: -50px; left: -50px; background: rgba(255, 255, 255, 0.15); }
+        .amber .prism-flare.top-right { top: -50px; right: -50px; background: rgba(255, 179, 71, 0.1); }
+        .blue .prism-flare.top-left { top: -50px; left: -50px; background: rgba(177, 75, 244, 0.2); }
+        .blue .prism-flare.top-right { top: -50px; right: -50px; background: rgba(0, 240, 255, 0.15); }
+
+        .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            margin-bottom: 30px; /* Abstand zum Titel erhöht */
+            position: relative;
+            z-index: 2;
+        }
+
+        .svg-icon {
+            width: 140px; /* Leicht vergrößert passend zur Kachel */
+            height: 140px;
+        }
+        
+        .amber .svg-icon { filter: drop-shadow(0 0 15px rgba(255, 200, 114, 0.4)); }
+        .blue .svg-icon { filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4)); }
+
+        .app-title {
+            font-size: 1.4rem; /* Schriftgröße an Volumen angepasst */
+            font-weight: 700;
+            margin-bottom: 15px; /* Abstand zur Beschreibung erhöht */
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
         .app-desc {
             font-size: 0.85rem;
-            color: var(--text-dim);
-            line-height: 1.4;
+            color: #f1f5f9;
+            line-height: 1.6; /* Bessere Lesbarkeit */
+            text-align: center;
+            flex-grow: 1;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            margin-bottom: 20px; /* Luft vor dem Footer */
         }
 
-        footer {
-            margin-top: auto;
-            padding: 20px;
-            color: var(--line-idle);
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 25px; /* Abstand zur Trennlinie erhöht */
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 2;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-ready .status-dot { background-color: #10b981; box-shadow: 0 0 10px #10b981; }
+        .status-ready .status-text { color: #10b981; }
+        
+        .status-pending .status-dot { background-color: #facc15; box-shadow: 0 0 10px #facc15; }
+        .status-pending .status-text { color: #facc15; }
+
+        .version-pill {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 14px;
+            border-radius: 12px;
             font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1f5f9;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
+    <div class="stars"></div>
+    <div class="perspective-grid"></div>
+
     <header>
-        <h1>Heiko´s App-Kiste</h1>
-        <div class="subtitle">HTML5 Deployments</div>
+        <h1>Heiko's App-Kiste</h1>
+        <div class="subtitle-pill">HTML5 Deployments</div>
     </header>
 
     <div class="app-grid">
 
-        <a href="./Harmonie Engine Pro 1.5/index.html" class="app-card">
-            <div class="app-name">Harmonie Engine Pro 1.5</div>
-            <div class="app-desc">Das Hilfs-Werkzeug für Songerstellung</div>
-        </a>
+        <!-- Karte 1: Harmonie Engine -->
+        <div class="card-wrapper amber">
+            <a href="./Harmonie Engine Pro 1.5/index.html" class="app-card">
+                <div class="prism-flare top-left"></div>
+                <div class="prism-flare top-right"></div>
+                
+                <div class="icon-container">
+                    <svg class="svg-icon" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffedd5" />
+                                <stop offset="50%" stop-color="#fdba74" />
+                                <stop offset="100%" stop-color="#f97316" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="58" y="25" width="4" height="70" rx="2" fill="url(#amberGrad)"/>
+                        <rect x="48" y="40" width="4" height="40" rx="2" fill="url(#amberGrad)"/>
+                        <rect x="68" y="35" width="4" height="50" rx="2" fill="url(#amberGrad)"/>
+                        <rect x="38" y="50" width="4" height="20" rx="2" fill="url(#amberGrad)"/>
+                        <rect x="78" y="45" width="4" height="30" rx="2" fill="url(#amberGrad)"/>
+                        <rect x="28" y="55" width="4" height="10" rx="2" fill="url(#amberGrad)"/>
+                        <rect x="88" y="52" width="4" height="16" rx="2" fill="url(#amberGrad)"/>
+                        <path d="M85 25 L85 40 A 6 6 0 1 1 78 35 L78 20 L95 15 L95 30 A 6 6 0 1 1 88 25 L88 18 L85 19 Z" fill="url(#amberGrad)"/>
+                        <path d="M100 75 L100 85 A 5 5 0 1 1 93 82 L93 70 L100 68 Z" fill="url(#amberGrad)" opacity="0.8"/>
+                        <path d="M25 35 L25 45 A 5 5 0 1 1 18 42 L18 30 L25 28 Z" fill="url(#amberGrad)" opacity="0.7"/>
+                    </svg>
+                </div>
+                
+                <div class="app-title">Harmonie Engine Pro 1.5</div>
+                <div class="app-desc">Das Hilfs-Werkzeug für Songerstellung<br>und Akkord-Progressionen.</div>
+                
+                <div class="card-footer">
+                    <div class="status status-ready">
+                        <div class="status-dot"></div>
+                        <span class="status-text">Bereit</span>
+                    </div>
+                    <div class="version-pill">v1.5</div>
+                </div>
+            </a>
+        </div>
 
-        <a href="./App_Ordnername_2/index.html" class="app-card">
-            <div class="app-name">Leer</div>
-            <div class="app-desc">Reserviert für zukünftige Deployments.</div>
-        </a>
-
-        <a href="#" class="app-card" style="opacity: 0.5; pointer-events: none;">
-            <div class="app-name">Slot Empty</div>
-            <div class="app-desc">Reserviert für zukünftige Deployments.</div>
-        </a>
+        <!-- Karte 2: Slot Empty -->
+        <div class="card-wrapper blue">
+            <a href="./App_Ordnername_2/index.html" class="app-card">
+                <div class="prism-flare top-left"></div>
+                <div class="prism-flare top-right"></div>
+                
+                <div class="icon-container">
+                    <svg class="svg-icon" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00f2fe" />
+                                <stop offset="100%" stop-color="#4facfe" />
+                            </linearGradient>
+                            <linearGradient id="purpleGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#b14bf4" />
+                                <stop offset="100%" stop-color="#00f2fe" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="60" cy="60" r="12" fill="#050814" stroke="url(#blueGrad)" stroke-width="3"/>
+                        <circle cx="60" cy="60" r="22" stroke="url(#purpleGrad)" stroke-width="2" stroke-dasharray="6 3" opacity="0.9"/>
+                        <circle cx="60" cy="60" r="32" stroke="url(#blueGrad)" stroke-width="1.5" stroke-dasharray="2 6" opacity="0.7"/>
+                        <circle cx="60" cy="60" r="42" stroke="url(#purpleGrad)" stroke-width="2" stroke-dasharray="12 8" opacity="0.5"/>
+                        <circle cx="60" cy="60" r="50" stroke="url(#blueGrad)" stroke-width="1" opacity="0.3"/>
+                        <circle cx="60" cy="8" r="1.5" fill="url(#blueGrad)"/>
+                        <circle cx="112" cy="60" r="1.5" fill="url(#purpleGrad)"/>
+                        <circle cx="60" cy="112" r="1.5" fill="url(#blueGrad)"/>
+                        <circle cx="8" cy="60" r="1.5" fill="url(#purpleGrad)"/>
+                        <circle cx="96" cy="24" r="1" fill="url(#blueGrad)"/>
+                        <circle cx="24" cy="96" r="1" fill="url(#purpleGrad)"/>
+                    </svg>
+                </div>
+                
+                <div class="app-title">Slot Empty</div>
+                <div class="app-desc">Reserviert für zukünftige Deployments<br>und VST-Web-Interfaces.</div>
+                
+                <div class="card-footer">
+                    <div class="status status-pending">
+                        <div class="status-dot"></div>
+                        <span class="status-text">Ausstehend</span>
+                    </div>
+                    <div class="version-pill">N/A</div>
+                </div>
+            </a>
+        </div>
 
     </div>
-
-    <footer>
-        System Status: Online
-    </footer>
 
 </body>
 </html>
